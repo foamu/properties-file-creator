@@ -1,0 +1,175 @@
+package settingsfile;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+
+public class Settings {
+
+	private int bloodColor;
+	private boolean antiAliasing;
+	private boolean gore;
+	private int textureQuality;
+	private int modelQuality;
+
+	public int getBloodColor() {
+		return bloodColor;
+	}
+
+	public void setBloodColor(int bloodColor) {
+		this.bloodColor = bloodColor;
+	}
+
+	public boolean isAntiAliasing() {
+		return antiAliasing;
+	}
+
+	public void setAntiAliasing(boolean antiAliasing) {
+		this.antiAliasing = antiAliasing;
+	}
+
+	public boolean isGore() {
+		return gore;
+	}
+
+	public void setGore(boolean gore) {
+		this.gore = gore;
+	}
+
+	public int getTextureQuality() {
+		return textureQuality;
+	}
+
+	public void setTextureQuality(int textureQuality) {
+		this.textureQuality = textureQuality;
+	}
+
+	public int getModelQuality() {
+		return modelQuality;
+	}
+
+	public void setModelQuality(int modelQuality) {
+		this.modelQuality = modelQuality;
+	}
+
+	public void printSettings() {
+		System.out.println("Blood color: " + bloodColor + "\n" + "Anti-Aliasing: " + antiAliasing + "\n" + "Gore: "
+				+ gore + "\n" + "Texture quality: " + textureQuality + "\n" + "Model quality: " + modelQuality);
+	}
+
+	public void writeSettings() {
+
+		try {
+
+			Properties prop = new Properties();
+
+			FileOutputStream output = new FileOutputStream("config.properties");
+			prop.setProperty("AntiAliasing", "1");
+			prop.setProperty("BloodColor", "3");
+			prop.setProperty("Gore", "1");
+			prop.setProperty("TextureQuality", "3");
+			prop.setProperty("ModelQuality", "3");
+			prop.store(output, null);
+			output.close();
+
+			System.out.println("Properties file written.");
+
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found or not accessible.");
+		} catch (IOException e) {
+			System.out.println("Input/output exception.");
+		}
+	}
+
+	public void setSettings() {
+
+		try {
+
+			Properties prop = new Properties();
+
+			FileInputStream input = new FileInputStream("config.properties");
+			prop.load(input);
+
+			if (prop.getProperty("AntiAliasing") == "1") {
+				this.setAntiAliasing(true);
+			} else {
+				this.setAntiAliasing(false);
+			}
+
+			if (prop.getProperty("Gore") == "1") {
+				this.setGore(true);
+			} else {
+				this.setGore(false);
+			}
+
+			switch (prop.getProperty("BloodColor")) {
+
+			case "1":
+				this.setBloodColor(1);
+				break;
+			case "2":
+				this.setBloodColor(2);
+				break;
+			case "3":
+				this.setBloodColor(3);
+				break;
+			case "4":
+				this.setBloodColor(4);
+				break;
+			case "5":
+				this.setBloodColor(5);
+				break;
+			default:
+				this.setBloodColor(3);
+				break;
+
+			}
+
+			switch (prop.getProperty("TextureQuality")) {
+
+			case "1":
+				this.setTextureQuality(1);
+				break;
+			case "2":
+				this.setTextureQuality(2);
+				break;
+			case "3":
+				this.setTextureQuality(3);
+				break;
+			default: 
+				this.setTextureQuality(3);
+				break;
+				
+			}
+
+			switch (prop.getProperty("ModelQuality")) {
+			case "1":
+				this.setModelQuality(1);
+				break;
+			case "2":
+				this.setModelQuality(2);
+				break;
+			case "3":
+				this.setModelQuality(3);
+				break;
+			default:
+				this.setModelQuality(3);
+				break;
+				
+			}
+
+			input.close();
+
+			System.out.println("Successfully set config.propeties attributes to application.");
+			this.printSettings();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found, creating default config.properties file.");
+			this.writeSettings();
+		} catch (IOException e) {
+			System.out.println("Input/Output exception.");
+		}
+	}
+}
